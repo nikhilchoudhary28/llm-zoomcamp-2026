@@ -2,14 +2,14 @@
 from google.genai import types
 
 class RagBase:
-    def __init__(self, index, client, model="gemini-2.5-flash", course="llm-zoomcamp"):
-        # Encapsulating dependencies so they aren't bound to global notebook variables
-        self.index = index
+    # 1. Update the initialization parameters to take es_client instead of a minsearch index
+    def __init__(self, es_client, index_name="course-questions", client=None, model="gemini-2.5-flash", course="llm-zoomcamp"):
+        self.es_client = es_client
+        self.index_name = index_name
         self.client = client
         self.model = model
         self.course = course
         
-        # Default templates
         self.instructions = """
         Your task is to answer questions from the course participants based on the provided context.
         Use the context to find relevant information and provide accurate answers. 
@@ -17,13 +17,36 @@ class RagBase:
         """
         self.user_prompt_template = "Question:\n{question}\n\nContext:\n{context}"
 
+    # 2. Rewrite the search method using your working Elasticsearch DSL query
     def search(self, query):
-        return self.index.search(
-            query,
-            boost_dict={"question": 2.0, "section": 0.5},
-            filter_dict={"course": self.course},
-            num_results=5
-        )
+        search_query = {
+            "size": 5,
+            "query": {
+                "bool": {
+                    "must": {
+                        "multi_match": {
+                            "query": query,
+                            "fields": ["question^2", "text", "section"],
+                            "type": "best_fields"
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "course": self.course
+                        }
+                    }
+                }
+            }
+        }
+        
+        response = self.es_client.search(index=self.index_name, body=search_query)
+        
+        # 3. Cleanly parse the nested results list before passing it down the pipeline
+        result_docs = []
+        for hit in response['hits']['hits']:
+            result_docs.append(hit['_source'])
+            
+        return result_docs
 
     def build_context(self, search_results):
         lines = []
