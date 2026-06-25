@@ -1,17 +1,30 @@
-cat << 'EOF' > README.md
-# LLM Zoomcamp 2026 - Module 2: Vector Search Homework
+# LLM Zoomcamp 2026 - Portfolio & Homework Solutions
 
-This repository contains the practical implementation and homework solutions for Module 2 of the LLM Zoomcamp. The focus of this module is on understanding the core mechanics of vector search, text search, and hybrid ranking algorithms from scratch.
+This repository contains my practical implementations, codebase, and homework solutions for the LLM Zoomcamp course.
+
+## 📁 Repository Structure
+- `homework/module_01.ipynb`: RAG intro, basic tokenization, and search scoring logic.
+- `homework/homework_module_2.ipynb`: Complete implementation of dense vector and hybrid search pipelines.
+- `download.py` / `embedder.py`: Utilities for managing lightweight ONNX text embedding runtimes.
+
+---
 
 ## 🛠️ Tech Stack & Utilities
-- **Environment & Dependency Management:** `uv` (fast Python package installer and resolver)
-- **Embeddings:** ONNX Runtime (`Embedder` using `Xenova/all-MiniLM-L6-v2` for lightweight, CPU-efficient vector generation)
-- **Data Source:** Pinned GitHub repository lessons data (commit `8c1834d`) parsed using `gitsource`
-- **Search Engines:** Pure NumPy matrix operations (`X.dot(v)`) alongside evaluation comparisons with `minsearch`
+- **Environment & Dependency Management:** `uv` (fast, lightweight Python package installer and workspace resolver).
+- **Embeddings Runtime:** ONNX Runtime (`Embedder` utilizing `Xenova/all-MiniLM-L6-v2` for CPU-efficient vector generation without heavy PyTorch layers).
+- **Search Indices:** Pure NumPy matrix computations (`X.dot(v)`) combined with evaluations using the `minsearch` utility.
+- **Data Gathering:** Automated ingestion pipelines parsing multi-module markdown documents using the `gitsource` driver.
 
-## 🎯 Implementation Details
-- **Q1: Embedding Queries:** Generating 384-dimensional dense vectors using a lightweight local ONNX workflow.
-- **Q2 & Q3: Hand-Crafted Vector Search:** Manually parsing document chunks, calculating normalized dot products, and identifying highest-scoring lesson profiles.
-- **Q4 & Q5: Vector vs. Keyword Evaluation:** Contrasting dense semantic retrieval against traditional text-matching indices.
-- **Q6: Hybrid Search Engine:** Merging separate vector and text retrieval ranks using **Reciprocal Rank Fusion (RRF)** with a tuning constant of `k = 60`.
-EOF
+---
+
+## 🎯 Implementation Highlights
+
+### 🔹 Module 1: Introduction to Search & RAG
+- **Knowledge Base Setup:** Parsed unstructured data files to form a searchable document index.
+- **Basic Retrieval:** Configured exact keyword search criteria and initial text-matching scores.
+- **RAG Execution:** Built out basic orchestration prompts for generative modeling tasks.
+
+### 🔹 Module 2: Advanced Vector Search & Ranking Fusion
+- **Dense Vector Embedding:** Implemented 384-dimensional dense semantic array mapping for cross-document query handling.
+- **Semantic Retrieval:** Built a custom vector space retrieval mechanism from scratch using normalized cosine dot products.
+- **Hybrid Search Engine:** Combined the precision of classic exact-match keyword search with the conceptual awareness of vector search using **Reciprocal Rank Fusion (RRF)** at a tuning constant of `k = 60`.
